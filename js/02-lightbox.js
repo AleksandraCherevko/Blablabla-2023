@@ -21,16 +21,16 @@ function createGalleryCardsMarkup(galleryItems) {
    </a>
    </li>`;
     })
+
     .join("");
 }
 
+let lightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
+  captionDelay: 250,
+});
 
 function imageClick(evt) {
   evt.preventDefault();
-  const options = {
-    captionsData: "alt",
-    captionDelay: 250,
-  };
-  const lightbox = new SimpleLightbox(".gallery a", options);
-  window.removeEventListener("click", imageClick);
 }
+console.log(evt.target);

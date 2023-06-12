@@ -30,55 +30,30 @@ function createGalleryCardsMarkup(galleryItems) {
 }
 
 function imageClick(evt) {
-  blockStandartAction(evt);
+  evt.preventDefault();
   if (evt.target.nodeName !== "IMG") {
     return;
   }
   console.log(evt.target);
 
-  const instance = basicLightbox.create(` <div class="modal">
+  const modalPicture = basicLightbox.create(` <div class="modal">
     <img src="${evt.target.dataset.source}" width="800" height="600"> </div>
 `);
 
-  instance.show();
+  modalPicture.show();
 
   imagesContainer.addEventListener("keydown", (evt) => {
     if (evt.code === "Escape") {
-      instance.close();
+      modalPicture.close();
     }
   });
 }
 
-function blockStandartAction(evt) {
-  evt.preventDefault();
-}
-
-// const modalElement = document.querySelector(".modal");
-// modalElement.addEventListener("click", () => {
-//   instance.close();
-// });
-
-// REPETA
-// function onImagesContainerClick(evt) {
-//   blockStandartAction(evt);
-//   const isImageSwatchEl = evt.target.classList.contains("gallery__item");
-
-//   if (!isImageSwatchEl) {
-//     return;
-//   }
-
-//   console.log(evt.target);
-
-// basiclightbox , https://basiclightbox.electerious.com/
-
-// const instance = basicLightbox.create(`
-//     <img src="${evt.dataset.sourse}" width="800" height="600">
-// `);
-
-// instance.show();
-
-//   function onImagesContainerClick(evt) {
-//     blockStandartAction(evt);
-//     if (evt.target.nodeName !== "IMG") {
-//       return;
-//     }
+const escapePress = basicLightbox.create(".modal", {
+  onShow: () => {
+    window.addEventListener("keydown", escapePress);
+  },
+  onClose: () => {
+    window.removeEventListener("keydown", escapePress);
+  },
+});
