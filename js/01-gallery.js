@@ -1,5 +1,5 @@
 import { galleryItems } from "./gallery-items.js";
-// Change code below this line
+// // Change code below this line
 
 console.log(galleryItems);
 
@@ -8,8 +8,6 @@ const imagesContainer = document.querySelector(".gallery");
 const cardsMarkup = createGalleryCardsMarkup(galleryItems);
 
 imagesContainer.insertAdjacentHTML("beforeend", cardsMarkup);
-
-imagesContainer.addEventListener("click", imageClick);
 
 function createGalleryCardsMarkup(galleryItems) {
   return galleryItems
@@ -29,31 +27,29 @@ function createGalleryCardsMarkup(galleryItems) {
     .join("");
 }
 
-function imageClick(evt) {
+imagesContainer.addEventListener("click", showBigImage);
+
+function showBigImage(evt) {
   evt.preventDefault();
-  if (evt.target.nodeName !== "IMG") {
+
+  if (evt.target.nodeName != "IMG") {
     return;
   }
-  console.log(evt.target);
 
-  const modalPicture = basicLightbox.create(` <div class="modal">
-    <img src="${evt.target.dataset.source}" width="800" height="600"> </div>
-`);
-
-  modalPicture.show();
-
-  imagesContainer.addEventListener("keydown", (evt) => {
-    if (evt.code === "Escape") {
-      modalPicture.close();
+  const instance = basicLightbox.create(
+    `
+<img src="${evt.target.dataset.source}" width="800" height="600">`,
+    {
+      onShow: () => document.addEventListener("keydown", onEscPress),
+      ocClose: () => document.removeEventListener("keydown", onEscPress),
     }
-  });
-}
+  );
 
-const escapePress = basicLightbox.create(".modal", {
-  onShow: () => {
-    window.addEventListener("keydown", escapePress);
-  },
-  onClose: () => {
-    window.removeEventListener("keydown", escapePress);
-  },
-});
+  instance.show();
+
+  function onEscPress(evt) {
+    if (evt.code === "Escape") {
+      instance.close();
+    }
+  }
+}
